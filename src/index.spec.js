@@ -9,8 +9,9 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   // launch browser
   browser = await puppeteer.launch({
-    headless: false, // headless mode set to false so browser opens up with visual feedback
-    slowMo: 100, // how slow actions should be
+    headless: true, // headless mode set to false so browser opens up with visual feedback
+    slowMo: false, // how slow actions should be
+    devtools: true,
   });
   // creates a new page in the opened browser
   page = await browser.newPage();
@@ -29,10 +30,11 @@ describe("Posts tests", () => {
 
   it("page title", async () => {
     const title = await page.title();
-    expect(title).toBe("Posts App v. 1.1");
+    expect(title).toBe("Posts App v. 1.1"); // VERIFY
   });
 
   it("type text", async () => {
+    //===========SETUP pupetter
     // Accept confirm dialog
     page.on("dialog", async (dialog) => {
       await dialog.accept();
@@ -46,11 +48,20 @@ describe("Posts tests", () => {
     await page.waitForSelector($delBtn);
     let knopok = await page.$$($delBtn);
     // verify that 1 was added
+    // VERFY
     expect(knopok.length).toBe(1);
     // delete
     await page.click($delBtn);
     await page.waitFor(300);
     knopok = await page.$$($delBtn);
     expect(knopok.length).toBe(0);
+  });
+
+  it("should check content label", async () => {
+    const $labelContent = await page.$eval(
+      `label.form-label`,
+      (el) => el.textContent
+    );
+    expect($labelContent).toBe("Content:");
   });
 });

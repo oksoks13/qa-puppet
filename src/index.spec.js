@@ -43,18 +43,18 @@ describe("Posts tests", () => {
     await page.type("textarea.form-control", "Hello World");
     // click add
     await page.click("button.btn-primary");
-    const $delBtn = "button.posts-list_remBtn__xNP6W";
+    const delBtnSelector = "button.posts-list_remBtn__xNP6W";
     // wait for  $del
-    await page.waitForSelector($delBtn);
-    let knopok = await page.$$($delBtn);
+    await page.waitForSelector(delBtnSelector);
+    let $$delButtons = await page.$$(delBtnSelector);
     // verify that 1 was added
     // VERFY
-    expect(knopok.length).toBe(1);
+    expect($$delButtons.length).toBe(1);
     // delete
-    await page.click($delBtn);
+    await page.click(delBtnSelector);
     await page.waitFor(300);
-    knopok = await page.$$($delBtn);
-    expect(knopok.length).toBe(0);
+    $$delButtons = await page.$$(delBtnSelector);
+    expect($$delButtons.length).toBe(0);
   });
 
   it("should check content label", async () => {

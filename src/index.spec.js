@@ -1,10 +1,13 @@
 const puppeteer = require("puppeteer");
 /**@type {puppeteer.Browser} */
-let browser;
+// let browser;
 /**@type {puppeteer.Page} */
 let page;
 
-jest.setTimeout(30000);
+jest.setTimeout(30000); // because when headless: false, it takes longer
+
+const ENTER = String.fromCharCode(13);
+const TAB = String.fromCharCode(9);
 
 beforeAll(async () => {
   // launch browser
@@ -49,7 +52,38 @@ describe("Todo app", () => {
     expect($$liElements2.length).toBe(4);
   });
 
+  it("test completed action", async () => {
+    // click completed
+    const $completedButton = await page.$("[data-e2e=completed]");
+    await $completedButton.click();
+
+    // see `There are no items.`
+    const noItemsSelector = ".alert.alert-info";
+    await page.$(".alert.alert-info");
+    const noItemsText = await page.$eval(
+      noItemsSelector,
+      (el) => el.textContent
+    );
+    expect(noItemsText).toBe("There are no items.");
+    // click All
+    // select first in list
+    // goto completed
+    // should be one element there
+    await page.waitFor(5000);
+  });
+  it("should check items left", async () => {
+    //type text
+    await page.type("input.form-control.add-todo", "My New Task");
+    //press enter
+    await page.keyboard.type(ENTER);
+    //grab selector of
+    const selector = "footer > div:nth-child(2)";
+    //verify he text matches 4
+    expect().toMatch("4 items left");
+  });
+
   /*
+
   it("type text", async () => {
     //===========SETUP pupetter
     // Accept confirm dialog

@@ -9,8 +9,8 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   // launch browser
   browser = await puppeteer.launch({
-    headless: true, // headless mode set to false so browser opens up with visual feedback
-    slowMo: false, // how slow actions should be
+    headless: false, // headless mode set to false so browser opens up with visual feedback
+    slowMo: 100, // how slow actions should be
     devtools: true,
   });
   // creates a new page in the opened browser
@@ -21,18 +21,35 @@ afterAll(async () => {
   browser.close();
 });
 
-describe("Posts tests", () => {
+describe("Todo app", () => {
   beforeAll(async () => {
-    await page.goto(`https://posts.itproto.com/`, {
+    await page.goto(`http://oksi-todo.itproto.com`, {
       waitUntil: "domcontentloaded",
     });
   });
 
-  it("page title", async () => {
+  it("should be correct title", async () => {
     const title = await page.title();
-    expect(title).toBe("Posts App v. 1.1"); // VERIFY
+    expect(title).toBe("E2E v.1");
   });
 
+  it("should add todo item", async () => {
+    const $$liElements1 = await page.$$(`[data-e2e=todo-items] li`);
+    expect($$liElements1.length).toBe(3);
+    // type text
+    await page.type("input.form-control.add-todo", "My New Task");
+    // simulate keyboard enter
+    await page.keyboard.type(String.fromCharCode(13));
+    // wait a bit
+    await page.waitFor(100);
+    // expect that we have 4 item
+    const $myList = await page.$(`[data-e2e=todo-items]`);
+    $myList.screenshot({ path: "list.png" });
+    const $$liElements2 = await page.$$(`[data-e2e=todo-items] li`);
+    expect($$liElements2.length).toBe(4);
+  });
+
+  /*
   it("type text", async () => {
     //===========SETUP pupetter
     // Accept confirm dialog
@@ -63,5 +80,5 @@ describe("Posts tests", () => {
       (el) => el.textContent
     );
     expect($labelContent).toBe("Content:");
-  });
+  });*/
 });

@@ -9,8 +9,8 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   // launch browser
   browser = await puppeteer.launch({
-    headless: true, // headless mode set to false so browser opens up with visual feedback
-    slowMo: false, // how slow actions should be
+    headless: false, // hedless:false SHOW browser, headless:true - fast but no browser
+    slowMo: false, //
     devtools: true,
   });
   // creates a new page in the opened browser
@@ -55,6 +55,7 @@ describe("Posts tests", () => {
     await page.waitFor(300);
     $$delButtons = await page.$$(delBtnSelector);
     expect($$delButtons.length).toBe(0);
+    await page.waitFor(2000);
   });
 
   it("should check content label", async () => {

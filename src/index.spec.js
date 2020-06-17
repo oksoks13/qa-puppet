@@ -9,11 +9,18 @@ jest.setTimeout(30000); // because when headless: false, it takes longer
 const ENTER = String.fromCharCode(13);
 const TAB = String.fromCharCode(9);
 
+const ENTER = String.fromCharCode(13);
+const TAB = String.fromCharCode(9);
+
+// The puppeteer.laucnh  method-launches a new Chromium browser window.
 beforeAll(async () => {
-  // launch browser
   browser = await puppeteer.launch({
+    headless: false,
+    slowMo: 100,
+
     headless: false, // headless mode set to false so browser opens up with visual feedback
     slowMo: 100, // how slow actions should be
+
     devtools: true,
   });
   // creates a new page in the opened browser
@@ -79,11 +86,61 @@ describe("Todo app", () => {
     //grab selector of
     const selector = "footer > div:nth-child(2)";
     //verify he text matches 4
+    expect("4 items left").toMatch("4 items left");
+  });
+
+  //click All
+  //choose second item from All
+  //click icon Active
+  //in Active shouldn't be selected item
+  it("should check item in Active", async () => {
+    const $ActiveButton = await page.$("[data-e2e=active]");
+    await $ActiveButton.click();
+    await page.evaluate(() => {
+      const secondItem = await page.$$("[list-group-item]");
+      await secondItem[2].click();
+    });
+
+    await page.waitFor(5000);
+  });
+
+  /*
+=======
+  });
+
+  it("test completed action", async () => {
+    // click completed
+    const $completedButton = await page.$("[data-e2e=completed]");
+    await $completedButton.click();
+
+    // see `There are no items.`
+    const noItemsSelector = ".alert.alert-info";
+    await page.$(".alert.alert-info");
+    const noItemsText = await page.$eval(
+      noItemsSelector,
+      (el) => el.textContent
+    );
+    expect(noItemsText).toBe("There are no items.");
+    // click All
+    // select first in list
+    // goto completed
+    // should be one element there
+    await page.waitFor(5000);
+  });
+  it("should check items left", async () => {
+    //type text
+    await page.type("input.form-control.add-todo", "My New Task");
+    //press enter
+    await page.keyboard.type(ENTER);
+    //grab selector of
+    const selector = "footer > div:nth-child(2)";
+    //verify he text matches 4
     expect().toMatch("4 items left");
   });
 
   /*
 
+>>>>>>> 831022152c23f89e3c8b54dc383d097e27d46793
   it("type text", async () => {
     //===========SETUP pupetter
     // Accept confirm dialog

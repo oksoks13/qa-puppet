@@ -12,12 +12,8 @@ const TAB = String.fromCharCode(9);
 // The puppeteer.laucnh  method-launches a new Chromium browser window.
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 100,
-
     headless: false, // headless mode set to false so browser opens up with visual feedback
     slowMo: 100, // how slow actions should be
-
     devtools: true,
   });
   // creates a new page in the opened browser
@@ -86,9 +82,18 @@ describe("Todo app", () => {
     expect("4 items left").toMatch("4 items left");
   });
 
-  //go to List
-  //delete second item
-  //confirm deletion
-  //expected there 
+  it.only("test search buttons on the tab  Active", async () => {
+    // - click on Active
+    const $activeButton = await page.$(e2e('Active'))
+    // - click on search field
+    // - in the search field enter the name of one of the tasks
+    // - wait some time
+    // - expect to see task which we type in the list
+    expect(true).toBe(false);
+
+  });
 
 });
+
+
+const e2e = (attrValue) => `[data-e2e=${attrValue}]`

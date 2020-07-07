@@ -17,6 +17,7 @@ TEST PLAN
 1. Testing search buttons on the tab Active
 
 - click on Active
+- click on search button
 - click on search field
 - in the search field enter the name of one of the tasks
 - wait some time

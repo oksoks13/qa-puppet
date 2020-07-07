@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const { clear } = require("console");
 /**@type {puppeteer.Browser} */
 // let browser;
 /**@type {puppeteer.Page} */
@@ -85,7 +86,7 @@ describe("Todo app", () => {
 
   const e2e = (attrValue) => `[data-e2e=${attrValue}]`;
 
-  it.only("test search buttons on the tab  Active", async () => {
+  it("test search buttons on the tab  Active", async () => {
     // - click on Active
     const $activeButton = await page.$(e2e('active'));
     await $activeButton.click();
@@ -105,12 +106,27 @@ describe("Todo app", () => {
 
     // - wait some time
     await page.waitFor(200);
+
     //grab selector of
     const $searchForm = "input.form-control.search";
+
     // expect to see task which we type in the list
     expect("React").toMatch("React");
 
-
-    //expect(true).toBe(false);
   });
+
+
+  it.only("Testing plus button on tab All", async () => {
+    //click on Active
+    const $activeButton = await page.click('a.button.search');
+    //click on search field
+    const $searchField = await page.focus('input.form-control');
+
+    //in the search field enter the name of one of the tasks
+    await page.type('input.form-control', "Learn React");
+    // wait some time
+    await page.waitFor(200);
+    // expect to see task which we type in the list
+    expect('Learn React').toMatch('Learn React');
+  })
 })

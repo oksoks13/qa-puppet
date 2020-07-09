@@ -25,7 +25,7 @@ TEST PLAN
 
 2. Testing plus button on tab All
 
-- click on Active
+- click on All
 - click plus button
 - excpect to see that the input field disappear
 

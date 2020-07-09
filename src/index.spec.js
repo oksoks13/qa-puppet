@@ -5,7 +5,7 @@ const { clear } = require("console");
 /**@type {puppeteer.Page} */
 let page;
 
-jest.setTimeout(30000); // because when headless: false, it takes longer
+jest.setTimeout(10000); // because when headless: false, it takes longer
 
 const ENTER = String.fromCharCode(13);
 const TAB = String.fromCharCode(9);
@@ -27,7 +27,7 @@ afterAll(async () => {
 });
 
 describe("Todo app", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await page.goto(`http://oksi-todo.itproto.com`, {
       waitUntil: "domcontentloaded",
     });
@@ -116,11 +116,11 @@ describe("Todo app", () => {
   });
 
 
-  it.only("Testing plus button on tab All", async () => {
+  it(" Search button on tab All", async () => {
     //click on Active
-    const $activeButton = await page.click('a.button.search');
+    await page.click('a.button.search');
     //click on search field
-    const $searchField = await page.focus('input.form-control');
+    await page.focus('input.form-control');
 
     //in the search field enter the name of one of the tasks
     await page.type('input.form-control', "Learn React");
@@ -129,4 +129,26 @@ describe("Todo app", () => {
     // expect to see task which we type in the list
     expect('Learn React').toMatch('Learn React');
   })
+
+  it(" plus button on tab All", async () => {
+    const $el = await page.$('.form-control.add-todo')
+    expect($el).toBeDefined(); // 1etap
+    //click plus button
+    await page.click('a.button.add');
+    //excpect to see that the input field disappear
+    await page.waitFor(() => !document.querySelector('.form-control.add-todo'));
+  })
+
+  it('Testing plus button on tab All (using generic function)', async () => {
+    await checkThatElementDisappearsOnAction(
+      '.form-control.add-todo',
+      async () => await page.click('a.button.add'));
+  });
 })
+
+const checkThatElementDisappearsOnAction = async (selector, action) => {
+  const $el = await page.$(selector);
+  expect($el).toBeDefined();
+  await action();
+  await page.waitFor((sel) => !document.querySelector(sel), {}, selector);
+}

@@ -60,7 +60,6 @@ describe("Todo app", () => {
     // click completed
     const $completedButton = await page.$("[data-e2e=completed]");
     await $completedButton.click();
-
     // see `There are no items.`
     const noItemsSelector = ".alert.alert-info";
     await page.$(".alert.alert-info");
@@ -130,7 +129,7 @@ describe("Todo app", () => {
     expect('Learn React').toMatch('Learn React');
   })
 
-  it(" plus button on tab All", async () => {
+  it("plus button on tab All", async () => {
     const $el = await page.$('.form-control.add-todo')
     expect($el).toBeDefined(); // 1etap
     //click plus button
@@ -160,7 +159,20 @@ it("When click to some Task on the tab All it became no active", async () => {
   // click on some Item from the list
   await page.click('.todo-item .checkbox label input[type=checkbox]')
   //expected to see that Task became non active
-  await page.$$eval("input[type='checkbox']", checks => checks.forEach(c => c.checked = true));
-  await page.$$eval("input[type='checkbox']", checks => checks.forEach(c => c.checked = false));
+
 })
+
+it("Testing that after click on some task from the tab All,he displayed on the Completed tab", async () => {
+  //click to some Task
+  await page.click('.todo-item .checkbox label input[type=checkbox]');
+  //wait some time
+  await page.waitFor(200);
+  //click to tab Complete
+  await page.click('[data-e2e=completed]');
+  //expected to see there selected task
+  await page.waitFor(500);
+
+})
+
+
 

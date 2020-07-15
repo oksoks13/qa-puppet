@@ -15,7 +15,7 @@ const TAB = String.fromCharCode(9);
 beforeAll(async () => {
   browser = await puppeteer.launch({
     headless: false, // headless mode set to false so browser opens up with visual feedback
-    slowMo: 100, // how slow actions should be
+    slowMo: 200, // how slow actions should be
     devtools: true,
   });
   // creates a new page in the opened browser
@@ -147,8 +147,20 @@ describe("Todo app", () => {
 })
 
 const checkThatElementDisappearsOnAction = async (selector, action) => {
-  const $el = await page.$(selector);
-  expect($el).toBeDefined();
-  await action();
-  await page.waitFor((sel) => !document.querySelector(sel), {}, selector);
+  const $el = await page.$(selector);//take element
+  expect($el).toBeDefined();//check that el exist
+  await action();//pass the function
+  await page.waitFor((sel) => !document.querySelector(sel), {}, selector);//check
 }
+
+it("When click to some Task on the tab All it became no active", async () => {
+  //click All
+  const allButton = await page.$('[data-e2e=all');
+  await allButton.click();
+  // click on some Item from the list
+  await page.click('.todo-item .checkbox label input[type=checkbox]')
+  //expected to see that Task became non active
+  await page.$$eval("input[type='checkbox']", checks => checks.forEach(c => c.checked = true));
+  await page.$$eval("input[type='checkbox']", checks => checks.forEach(c => c.checked = false));
+})
+
